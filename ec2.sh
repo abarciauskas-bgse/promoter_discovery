@@ -12,10 +12,11 @@ sudo pip install --upgrade --no-deps git+git://github.com/Theano/Theano.git --us
 #clone my repo
 git clone https://github.com/abarciauskas-bgse/promoter_discovery
 cd promoter_discovery
+wget -r http://mitra.stanford.edu/kundaje/nboley/RAMPAGE_enhancer_prediction/RAMPAGE_peaks/
 
 THEANO_FLAGS=mode=FAST_RUN,device=gpu,floatX=float32 ipython notebook
 
-#ssh -i ~/.ssh/abarciauskas-bgse.pem -L 10000:localhost:8888 ubuntu@ec2-54-193-98-81.us-west-1.compute.amazonaws.com
+#ssh -i ~/.ssh/abarciauskas.pem -L 10000:localhost:8888 ubuntu@ec2-54-193-98-81.us-west-1.compute.amazonaws.com
 
 # if permissions error
 # sudo chown -R ubuntu:ubuntu /home/ubuntu/

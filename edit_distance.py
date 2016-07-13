@@ -14,4 +14,4 @@ def edit_distance(seq1, seq2):
                 insertion = score_matrix.item((i,j-1)) + 1
                 substitution = score_matrix.item((i-1,j-1)) + 1
                 score_matrix.itemset((i,j), min(deletion, insertion, substitution))
-    return score_matrix.item((seq1_len, seq2_len))
+    return score_matrix.item((seq1_len-1, seq2_len-1))
