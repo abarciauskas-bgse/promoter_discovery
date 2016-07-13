@@ -1,4 +1,4 @@
-ssh -i ~/.ssh/abarciauskas.pem ubuntu@ec2-54-193-98-81.us-west-1.compute.amazonaws.com
+ssh -i ~/.ssh/abarciauskas-bgse.pem ubuntu@ec2-54-227-105-235.compute-1.amazonaws.com
 
 # One time on the instance
 sudo pip install --upgrade pip
@@ -16,7 +16,7 @@ wget -r http://mitra.stanford.edu/kundaje/nboley/RAMPAGE_enhancer_prediction/RAM
 
 THEANO_FLAGS=mode=FAST_RUN,device=gpu,floatX=float32 ipython notebook
 
-#ssh -i ~/.ssh/abarciauskas.pem -L 10000:localhost:8888 ubuntu@ec2-54-193-98-81.us-west-1.compute.amazonaws.com
+ssh -i ~/.ssh/abarciauskas-bgse.pem -L 10000:localhost:8888 ubuntu@ec2-54-227-105-235.compute-1.amazonaws.com
 
 # if permissions error
 # sudo chown -R ubuntu:ubuntu /home/ubuntu/
