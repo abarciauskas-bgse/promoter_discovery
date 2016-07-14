@@ -52,7 +52,7 @@ py.test
 
 ### Baseline: Random Classifier
 
-See **1 - Baseline (Randomized) Classifier**
+See **[1 - Baseline (Randomized) Classifier](./1%20-%20Baseline%20(Randomized)%20Classifier.ipynb)**
 
 A baseline classifier to evaluate the success of other classifiers is random classification based on the distribution of the training data. In the training data, the probability of a given region being a promoter is 0.79. The objective is to improve on the performance of a random classifier which assigns the class `0` by a random draw from a bernoulli distribution with probability of the training data. In 10-fold cross validation the accuracy of this classifier 0.67.
 
