@@ -1,5 +1,28 @@
 # Promoter Discovery Machine Learning Challenge
 
+## Installation
+
+### Software Requirements
+
+* python 2.7
+* python packages: matplotlib, sklearn, numpy, random, time, csv, unittest, pytest
+* [jupyter notebook](http://jupyter.readthedocs.io/en/latest/install.html)
+
+### Download code and run notebook
+
+```bash
+git clone https://github.com/abarciauskas-bgse/promoter_discovery
+cd promoter_discovery
+ipython notebook
+# navigate to http://localhost:9999 or whatever port is indicated in stdout
+```
+
+### Unit tests
+
+```
+py.test
+```
+
 ## Brief Background
 
 > In genetics, an e​nhancer​is a short (100 ­1000 base pairs) region of DNA that can be bound by proteins (activators) to increase the likelihood transcription will occur at a gene. P​romoter​is a similar sized region of the DNA that initiates transcription of a particular gene.
@@ -15,8 +38,11 @@
 * `0`: promoter
 * `1`: enhancer
 * Remove observations with unknown nucleobases, since this is a small set (15 observations)
+* Standard ML models fit in **Experiments** are fit with a randomly selected subset of 10,000 observations.
 
 ### Baseline: Random Classifier
+
+See **1- Baseline - Random Classifier**
 
 A baseline classifier to evaluate the success of other classifiers is random classification based on the distribution of the training data. In the training data, the probability of a given region being a promoter is 0.79. The objective is to improve on the performance of a random classifier which assigns the class `0` by a random draw from a bernoulli distribution with probability of the training data. In 10-fold cross validation the accuracy of this classifier 0.67.
 
@@ -24,14 +50,80 @@ A baseline classifier to evaluate the success of other classifiers is random cla
 
 #### Classifiers with no feature engineering
 
-The first set of experiments was to evaluate the accuracy of standard ML classifiers without any feature engineering. Because of the time required to train, data is subsampled (10,000 samples).
+See **2 - Classifiers (without feature engineering)**
 
-Results of these experiments can
+The first set of experiments was to evaluate the accuracy of standard ML classifiers without any feature engineering. Mostly the default parameters were used. The models are trained on 90% of training data and tested on the remaining 10%.
 
-#### String similarity measures
+| Classifier                                    | Score |
+|-----------------------------------------------|-------|
+| Logistic Regression                           | 0.777 |
+| Support Vector Machine with RBF Kernel        | 0.825 |
+| Support Vector Machine with Linear Kernel     | 0.780 |
+| Decision Tree Classifier                      | 0.783 |
+| Adaboost                                      | 0.796 |
+| Random Forest Classifier (n_estimators = 100) | 0.800 |
+| Naive Bayes                                   | 0.812 |
+| K-Nearest Neighbors (K = 6)                   | 0.843 |
+| Gradient Boosting Machine (n_estimators = 10) | 0.787 |
+
+
+#### Classifiers with bigram features
+
+> It may be helpful to think of the genome as a document written in an unknown language where words are allowed to overlap.
+
+See **3 - Bigram Frequencies**
+
+When strings or characters might overlap, it makes sense to analyse the frequency distributions of different ngrams. The smallest ngram which makes sense in this context is the bigram, representing a base pair. 16 unique base pairs were found in the data. The frequency distributions for each class, `promoter` and `enhancer` is analyzed in the **3 - Bigram Frequencies** notebook. It is evident that there are differences in the distributions of certain base pairs between each class. Most notably for the base pairs 'CG', 'AT' and 'TA'.
+
+This was the basis for the hypothesis that bigram frequencies are a predictive feature of DNA sequence classification. The same models trained in experiments with no feature engineering were trained using only the bigram frequencies as features. 
+
+This has the added benefit of reducing the feature space from 4000 to 16.
+
+| Classifier                                    | Score |
+|-----------------------------------------------|-------|
+| Logistic Regression                           | 0.846 |
+| Support Vector Machine with RBF Kernel        | 0.841 |
+| Support Vector Machine with Linear Kernel     | 0.846 |
+| Decision Tree Classifier                      | 0.845 |
+| Adaboost                                      | 0.845 |
+| Random Forest Classifier (n_estimators = 100) | 0.841 |
+| Naive Bayes                                   | 0.841 |
+| K-Nearest Neighbors (K = 15)                  | 0.846 |
+| Gradient Boosting Machine (n_estimators = 10) | 0.842 |
+
+Using bigrams features seems to have greater predictive power! The next step is to try to improve accuracy through hyperparameter testing and 10 fold cross validation of the best classifiers: K-NN, SVM with Linear Kernel and Logistic Regression.
+
+
+#### Cross-validation and Hyperparameter Selection with Bigram Features
+
+
+
+### Non-parameterized classifiers using Majority Vote or K-NN of String Similarity
 
 Many string similarity measures have applications in genetics in understanding regions of similarity ([sequence alignment](https://en.wikipedia.org/wiki/Sequence_alignment)). A majority vote or k-nearest neighbor classifier may be implemented using one of these measures of similarity or distance.
 
-The following similarity measures were used to analyze distributions of the scores for pairs of sequences both having label `0`, both having label `1` and having different labels.
+The similarity measures were used to analyze distributions of the scores for pairs of sequences both having label `0`, both having label `1` and having different labels.
+
+See **6 - Needleman Wunsch**.
+
+For example, one of the more flexible algorithms is the Needleman Wunsch (NW) algorithm. NW is a global sequence alignment algorithm which calculates a score representing the similarity of two strings allowing for mismatches, gaps (insertions or deletions) (includes a gap penalty) and dynamic programming.
+
+A majority vote classifier assessed on the top 3 NW scores for comparisons with 10 randomly selected sequences from each class achieved an accuracy of 0.8 in 100 trials.
+
+This is a very, very small sample and the algorithm is slow (46 minutes for this experiment) so these results are inconclusive. More analysis is required to answer questions such as "How many comparisons should be made?" and "How many votes should be counted?".
+
+## Future Work
+
+### Additional experiments using String Similarity Measures
+
+String similarity measures have distributions for sequences of the same class that are distinct from distributions for different classes. This indicates these measures reveal the true class of a sequence when evaluated against sequences of each class. However as noted above these algorithms are slow and further development in a language other than python (java) may facilitate further experimentation
+
+It would also likely be further revealling to add dimensions to the algorithms' scoring system so that a sequence is evaluated against multiple sequences from each class.
+
+### Recurrent Neural Networks
+
+Given the sequential nature of the data, it is very likely that a trained recurrent neural network, and even more so a recurrent neural network using long short term memory neurons, would have strong predictive power. This experiment was not possible given the computational requirements to train a RNN.*
+
+\* *Specifically, the hardware configuration I have experience with and attempted to revive (an AWS AMI on GPU-backed instance) is now out of date and needs some rejiggering, which I felt was probably out of scope for this project.*
 
 
