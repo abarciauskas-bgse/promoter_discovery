@@ -158,15 +158,15 @@ As found in bigram frequencies, this confirms the finding that frequency of bigr
 
 Many string similarity measures have applications in genetics in understanding regions of similarity ([sequence alignment](https://en.wikipedia.org/wiki/Sequence_alignment)). A majority vote or k-nearest neighbor classifier may be implemented using one of these measures of similarity or distance.
 
-Multiple similarity measures* were used to analyze distributions of the scores for pairs of sequences both having label `0`, both having label `1` and having different labels.
+Multiple similarity measures* (see [other_experiments/](./other_experiments)) were used to visualize distributions of the scores for pairs of sequences both having label `0`, both having label `1` and having different labels.
 
 See **[6 - Needleman Wunsch](./6%20-%20Needleman%20Wunsch.ipynb)**.
 
-For example, one of the more flexible algorithms is the [Needleman Wunsch (NW)](https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm) algorithm. NW is a global sequence alignment algorithm which calculates a score representing the similarity of two strings allowing for mismatches and gaps (insertions or deletions) using mismatch and gap penalties and a dynamic programming approach.
+One of the more flexible algorithms is the [Needleman Wunsch (NW)](https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm) algorithm. NW is a global sequence alignment algorithm which calculates a score representing the similarity of two strings allowing for mismatches and gaps (insertions or deletions) using mismatch and gap penalties and a dynamic programming approach.
 
 A majority vote classifier assessed on the top 3 NW scores for comparisons with 10 randomly selected sequences from each class achieved an accuracy of 0.8 in 100 trials.
 
-This is a very, very small sample and the algorithm is slow (46 minutes for this experiment) so these results are inconclusive.  This approach and other string similarity measures are often very slow, requiring quadratic time. More analysis is required to answer questions such as "How many comparisons should be made?" and "How many votes should be counted?".
+This is a very, very small sample and the algorithm is slow (this experiment took 46 minutes) so these results are inconclusive. This approach and other string similarity measures are often very slow, having quadratic time complexity. More analysis is required to answer questions such as "How many comparisons should be made?" and "How many votes should be counted?". Code optimization, a different programming language and parallel procoessing would dramatically reduce computation time required and expedite experimentation.
 
 \* Other experiments used edit distance, longest common subsequence and longest common substring measures.
 
@@ -174,7 +174,7 @@ This is a very, very small sample and the algorithm is slow (46 minutes for this
 
 ### Additional experiments using String Similarity Measures
 
-String similarity measures have distributions for sequences of the same class that are distinct from distributions for different classes. This indicates these measures reveal the true class of a sequence when evaluated against sequences of each class. However as noted above these algorithms are slow and further development in a language other than python (java) may facilitate further experimentation
+String similarity measures have distributions for sequences of the same class that are distinct from distributions for different classes. This indicates these measures reveal the true class of a sequence when evaluated against sequences of each class. However as noted above these algorithms are slow and further development in a language other than python as well as parallel processing may facilitate further experimentation.
 
 It would also likely be further revealling to add dimensions to the algorithms' scoring system so that a sequence is evaluated against multiple sequences from each class.
 
