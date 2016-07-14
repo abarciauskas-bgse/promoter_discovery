@@ -60,7 +60,7 @@ A baseline classifier to evaluate the success of other classifiers is random cla
 
 #### Classifiers with no feature engineering
 
-See **2 - Classifiers (without feature engineering)**
+See **[2 - Classifiers (without feature engineering)](./2%20-%20Classifiers%20(without%20feature%20engineering).ipynb)**
 
 The first set of experiments was to evaluate the accuracy of standard ML classifiers without any feature engineering. Mostly the default parameters were used. The models are trained on 90% of training data and tested on the remaining 10%.
 
@@ -81,7 +81,7 @@ The first set of experiments was to evaluate the accuracy of standard ML classif
 
 > It may be helpful to think of the genome as a document written in an unknown language where words are allowed to overlap.
 
-See **3 - Bigram Frequencies**
+See **[3 - Bigram Frequencies](./3%20-%20Bigram%20Frequencies.ipynb)** and **[4 - Classifiers using bigram features](./4%20-%20Classifiers%20using%20bigram%20features.ipynb)**
 
 When strings or characters might overlap, it makes sense to analyse the frequency distributions of different ngrams. The smallest ngram which makes sense in this context is the bigram, representing a base pair. 16 unique base pairs were found in the data. The frequency distributions for each class, `promoter` and `enhancer` is analyzed in the **3 - Bigram Frequencies** notebook. It is evident that there are differences in the distributions of certain base pairs between each class. Most notably for the base pairs 'CG', 'AT' and 'TA'.
 
@@ -106,7 +106,7 @@ Using bigrams features seems to have greater predictive power! The next step is 
 
 #### Cross-validation and Hyperparameter Selection with Bigram Features
 
-See **5 - Cross-validation and Hyperparameter Selection with Bigram Features**.
+See **[5 - Cross-validation and Hyperparameter Selection with Bigram Features](.//5%20-%20Cross-validation%20and%20Hyperparameter%20Selection%20with%20Bigram%20Features.ipynb)**.
 
 The next step in model selection was to optimize hyperparamters for each of the best classifier types listed above. To do this, the subset size was doubled to 20,000* and exhaustive grid search was used to optimize hyperparameters.**
 
@@ -156,7 +156,7 @@ Many string similarity measures have applications in genetics in understanding r
 
 The similarity measures were used to analyze distributions of the scores for pairs of sequences both having label `0`, both having label `1` and having different labels.
 
-See **6 - Needleman Wunsch**.
+See **[6 - Needleman Wunsch](./6%20-%20Needleman%20Wunsch.ipynb)**.
 
 For example, one of the more flexible algorithms is the Needleman Wunsch (NW) algorithm. NW is a global sequence alignment algorithm which calculates a score representing the similarity of two strings allowing for mismatches, gaps (insertions or deletions) (includes a gap penalty) and dynamic programming.
 
