@@ -1,6 +1,18 @@
 import numpy as np
 
 def needlman_wunsch(seq1, seq2):
+    """
+    Global sequence alignment
+    
+    Parameters
+    ----------
+    seq1 : array of strings
+    seq2 : array of strings
+
+    Returns
+    -------
+    Needleman-Wunsch score for best global alignment
+    """     
     gap_penalty = -1
     dissim_penalty = -1
     sim_penalty = +1
