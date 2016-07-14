@@ -5,7 +5,7 @@
 ### Software Requirements
 
 * python 2.7
-* python packages: matplotlib, sklearn, numpy, random, time, csv, unittest, pytest
+* python packages: matplotlib, sklearn, numpy, random, time, csv, unittest, pytest, tabulate
 * [jupyter notebook](http://jupyter.readthedocs.io/en/latest/install.html)
 
 ### Download the data
