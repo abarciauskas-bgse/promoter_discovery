@@ -1,3 +1,4 @@
 .ipynb_checkpoints
 RAMPAGE_PEAKS/
 __pycache__
+*.pyc
