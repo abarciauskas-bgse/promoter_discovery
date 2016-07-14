@@ -8,6 +8,14 @@
 * python packages: matplotlib, sklearn, numpy, random, time, csv, unittest, pytest
 * [jupyter notebook](http://jupyter.readthedocs.io/en/latest/install.html)
 
+### Download the data
+
+```
+wget -r --no-parent -A '*.bed' mitra.stanford.edu/kundaje/nboley/RAMPAGE_enhancer_prediction/RAMPAGE_peaks/train_data/
+wget -r --no-parent -A 'GRCh38.genome.fa' mitra.stanford.edu/kundaje/nboley/RAMPAGE_enhancer_prediction/RAMPAGE_peaks/train_data/
+mkdir RAMPAGE_PEAKS && mkdir RAMPAGE_PEAKS/train_data && mv mitra.stanford.edu/kundaje/nboley/RAMPAGE_enhancer_prediction/RAMPAGE_peaks/train_data/* RAMPAGE_peaks/train_data/
+```
+
 ### Download code and run notebook
 
 ```bash
@@ -17,7 +25,8 @@ ipython notebook
 # navigate to http://localhost:9999 or whatever port is indicated in stdout
 ```
 
-### Unit tests
+
+### Run unit tests
 
 ```
 py.test
@@ -39,10 +48,11 @@ py.test
 * `1`: enhancer
 * Remove observations with unknown nucleobases, since this is a small set (15 observations)
 * Standard ML models fit in **Experiments** are fit with a randomly selected subset of 10,000 observations.
+    * Note: It is possible random vs sequential sub-selection of the origin data set impacts accuracy. It appeared in experimenting with a subset of the initial 10,000 observations to achieve higher rates of accuracy from all classifiers. If this is a persistent characteristic of the data set it suggests there is something underlying the data generating process of the entire genome which may be predictive in sequence classification.
 
 ### Baseline: Random Classifier
 
-See **1- Baseline - Random Classifier**
+See **1 - Baseline (Randomized) Classifier**
 
 A baseline classifier to evaluate the success of other classifiers is random classification based on the distribution of the training data. In the training data, the probability of a given region being a promoter is 0.79. The objective is to improve on the performance of a random classifier which assigns the class `0` by a random draw from a bernoulli distribution with probability of the training data. In 10-fold cross validation the accuracy of this classifier 0.67.
 
@@ -91,12 +101,54 @@ This has the added benefit of reducing the feature space from 4000 to 16.
 | K-Nearest Neighbors (K = 15)                  | 0.846 |
 | Gradient Boosting Machine (n_estimators = 10) | 0.842 |
 
-Using bigrams features seems to have greater predictive power! The next step is to try to improve accuracy through hyperparameter testing and 10 fold cross validation of the best classifiers: K-NN, SVM with Linear Kernel and Logistic Regression.
+Using bigrams features seems to have greater predictive power! The next step is to try to improve accuracy through hyperparameter optimization using grid search and 10 fold cross validation of the best classifiers: **K-NN, SVM with Linear Kernel, Adaboost and Logistic Regression.**
 
 
 #### Cross-validation and Hyperparameter Selection with Bigram Features
 
+See **5 - Cross-validation and Hyperparameter Selection with Bigram Features**.
 
+The next step in model selection was to optimize hyperparamters for each of the best classifier types listed above. To do this, the subset size was doubled to 20,000* and exhaustive grid search was used to optimize hyperparameters.**
+
+**Results of Exhaustive Grid Search**
+
+| Classifier                                | Score |
+|-------------------------------------------|-------|
+| Logistic Regression                       | 0.851 |
+| Support Vector Machine with Linear Kernel | 0.850 |
+| Adaboost                                  | 0.846 |
+| K-Nearest Neighbors (K = 6)               | 0.835 |
+
+The best classifier is logistic regression with the hyperparameters `penalty = 'l2', C = 100, solver = 'lbfgs'`.
+
+Trained on the entire data set, this classifier achieved an accuracy of 0.852 in 10-fold cross-validation (or 0.8515 so approximately what was reported on the smaller data set). This result has the added benefit of using one of the simplest classifiers (and thus being fast, only taking 23 seconds to train on the entier data set) and being parameterized.
+
+As found in bigram frequencies, this confirms the finding that frequency of bigram 'CG' in a sequence is the greatest predictor. Every additional instance of the bigram 'CG' in a DNA decreases the probability of the sequence being an enhancer.^
+
+| Bigram   |   Coefficient |
+|:---------|--------------:|
+| AA       |        -0.002 |
+| AC       |        -0.021 |
+| GT       |        -0.02  |
+| AG       |        -0.004 |
+| CC       |         0.03  |
+| CA       |         0.003 |
+| CG       |        -0.068 |
+| TT       |        -0.015 |
+| GG       |         0.004 |
+| GC       |         0.006 |
+| AT       |         0.004 |
+| GA       |        -0.019 |
+| TG       |         0.023 |
+| TA       |        -0.002 |
+| TC       |         0.026 |
+| CT       |        -0.002 |
+
+\* Using a subset size of 10,000 all classifiers achieved the same accuracy.
+
+\*\* [Randomized search has been shown to be more efficient and better](http://www.jmlr.org/papers/volume13/bergstra12a/bergstra12a.pdf), but in this setting exhaustive grid search was possible and all that was necessary given the hyperparameter options.
+
+\^ The odds ratio for 'CG' coefficient is 0.93, which I believe may be interpreted as a unit increase in the frequence of 'CG' decreases probability of being labeled `enhancer` by 2% (odds ratio equal to `p/(1-p)`), but need someone to check my interpretation on this.
 
 ### Non-parameterized classifiers using Majority Vote or K-NN of String Similarity
 
