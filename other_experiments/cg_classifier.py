@@ -1,4 +1,4 @@
-execfile('ngram_frequencies.py')
+execfile('../ngram_frequencies.py')
 errors = 0
 num_trials = 100000
 for i in range(num_trials):

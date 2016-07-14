@@ -182,6 +182,10 @@ It would also likely be further revealling to add dimensions to the algorithms' 
 
 Given the sequential nature of the data, it is very likely that a trained recurrent neural network, and even more so a recurrent neural network using long short term memory neurons, would have strong predictive power. This experiment was not possible given the computational requirements to train a RNN.*
 
+### Technical work
+
+Add unit tests for similarity algorithms.
+
 \* *Specifically, the hardware configuration I have experience with and attempted to revive (an AWS AMI on GPU-backed instance) is now out of date and needs some rejiggering, which I felt was probably out of scope for this project.*
 
 # Conclusions
